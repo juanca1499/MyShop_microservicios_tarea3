@@ -21,8 +21,17 @@ Esta carpeta contiene el código fuente del Microservice 3 para el sistema Ejemp
 
    $ docker build -t api-django:1.0 .
 
-   $ docker run -d --name api-django --network tyk --ip 172.19.0.6 api-django:1.0
+   $ docker run -d --name api-django --network tyk --ip 172.15.0.6 api-django:1.0
+   ```
 
+   En Linux:
+
+   ```shell
+   $ cd microservice3
+
+   $ sudo docker build -t api-django:1.0 .
+
+   $ sudo docker run -d --name api-django --network tyk --ip 172.15.0.6 api-django:1.0
    ```
 
 ## Versión

@@ -26,7 +26,7 @@
     },
     "proxy": {
         "listen_path": "/hello/python",
-        "target_url": "http://172.19.0.4:49001/hello",
+        "target_url": "http://172.15.0.4:49001/hello",
         "strip_listen_path": true
     },
     "enable_batch_request_support": true

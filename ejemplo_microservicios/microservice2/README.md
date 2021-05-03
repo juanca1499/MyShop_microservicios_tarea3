@@ -16,9 +16,19 @@ Esta carpeta contiene el código fuente del Microservice 2 para el sistema Ejemp
 
    $ docker build -t api-dart:1.0 .
 
-   $ docker run -d --name api-dart --network tyk --ip 172.19.0.5 api-dart:1.0
-
+   $ docker run -d --name api-dart --network tyk --ip 172.15.0.5 api-dart:1.0
    ```
+
+   En Linux:
+
+   ```shell
+   $ cd microservice2
+
+   $ sudo docker build -t api-dart:1.0 .
+
+   $ sudo docker run -d --name api-dart --network tyk --ip 172.15.0.5 api-dart:1.0
+   ```
+
 
 ## Versión
 

@@ -25,7 +25,14 @@ Esta carpeta contiene el código fuente de la GUI para el sistema Ejemplo de Arq
    $ cd gui
 
    $ docker build -t gui:1.0 .
+   ```
 
+   En Linux:
+
+   ```shell
+   $ cd gui
+
+   $ sudo docker build -t gui:1.0 .
    ```
 
 #### Ejecución del contenedor de la GUI
@@ -34,16 +41,27 @@ Esta carpeta contiene el código fuente de la GUI para el sistema Ejemplo de Arq
 
    ```shell
    $ docker run -d --name gui -p 5000:5000 gui:1.0
+   ```
 
+   En Linux:
+
+   ```shell
+   $ sudo docker run -d --name gui -p 5000:5000 gui:1.0
    ```
 
 - Si todo se ejecutó con éxito podemos corroborar que nuestros contenedores se encuentran corriendo ejecutando el siguiente comando:
 
-    ```shell
-    $ docker ps
+   ```shell
+   $ docker ps
+   ```
 
-    ```
-    Este comando nos mostrará los contenedores que se encuentran corriendo, en la columna Status, debemos observar la palabra UP en los contenedores gui, api-python, api-dart, api-django, redis y tykio/tyk-gateway.
+   En Linux:
+
+   ```shell
+   $ sudo docker ps
+   ```
+
+   Este comando nos mostrará los contenedores que se encuentran corriendo, en la columna Status, debemos observar la palabra UP en los contenedores gui, api-python, api-dart, api-django, redis y tykio/tyk-gateway.
 
 - Ya que confirmamos que nuestros contenedores se encuentran corriendo podremos ingresar a nuestro navegador y verificar que el sistema de ejemplo para probar los microservicios se encuentra funcionando correctamente, ingresamos a la siguiente url: 
 

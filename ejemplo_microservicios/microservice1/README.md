@@ -19,8 +19,17 @@ Esta carpeta contiene el código fuente del Microservice 1 para el sistema Ejemp
 
    $ docker build -t api-python:1.0 .
 
-   $ docker run -d --name api-python --network tyk --ip 172.19.0.4 api-python:1.0
+   $ docker run -d --name api-python --network tyk --ip 172.15.0.4 api-python:1.0
+   ```
 
+   En Linux:
+
+   ```shell
+   $ cd microservice1
+
+   $ sudo docker build -t api-python:1.0 .
+
+   $ sudo docker run -d --name api-python --network tyk --ip 172.15.0.4 api-python:1.0
    ```
 
 

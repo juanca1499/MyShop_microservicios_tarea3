@@ -26,7 +26,7 @@
     },
     "proxy": {
         "listen_path": "/hello/dart",
-        "target_url": "http://172.19.0.5:49002/hello",
+        "target_url": "http://172.15.0.5:49002/hello",
         "strip_listen_path": true
     },
     "enable_batch_request_support": true
