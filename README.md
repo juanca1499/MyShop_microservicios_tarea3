@@ -62,7 +62,7 @@ Se deben correr los siguientes comandos en la carpeta raíz del proyecto.
    $ sudo docker network create --subnet=172.15.0.0/16 --attachable tyk
    ```
 
-   Nota: En caso de que ocurra un error relacionado con una superposición de direcciones, favor de revisar la sección de [Problemas frecuentes](#Problemas-frecuentes).
+   Nota: En caso de que ocurra un error relacionado con una superposición de direcciones, favor de revisar la sección de [Problemas frecuentes](#problemas-frecuentes).
 
 
 ### Ejecución del contenedor de redis
@@ -80,9 +80,9 @@ Se deben correr los siguientes comandos en la carpeta raíz del proyecto.
 
 ### Ejecución del contenedor de tyk
 
-    En Windows:
+   En Windows:
     
-    Para el siguiente comando es necesario sustituir la cadena '$(pwd)' por el path del directorio actual (directorio raíz del proyecto).
+   Para el siguiente comando es necesario sustituir la cadena '$(pwd)' por el path del directorio actual (directorio raíz del proyecto).
 
    ```shell
    $ docker run -d --name tyk_gateway --network tyk --ip 172.15.0.3 -p 8080:8080 -v "$(pwd)/ejemplo_microservicios/tyk-gateway/tyk.standalone.conf:/opt/tyk-gateway/tyk.conf" -v "$(pwd)/ejemplo_microservicios/tyk-gateway/apps:/opt/tyk-gateway/apps" tykio/tyk-gateway:v3.1.2
@@ -416,7 +416,7 @@ $ curl --request POST \
     Es importante recordar que debemos guardar el valor de 'key' pues será utilizado en el código de la GUI para acceder a cada microservicio.
 
 
-- Una vez que tengamos la llave para cada uno de los microservicios procederemos a sustituirlas en el archivo ejemplo_microservicios/gui/gui.py de la siguiente manera:
+- Una vez que tengamos la llave para cada uno de los microservicios procederemos a sustituirlas en el archivo [ejemplo_microservicios/gui/gui.py](ejemplo_microservicios/gui/gui.py) de la siguiente manera:
 
     1. En la línea número 33, remover el texto <microservice1_key> y reemplazarlo por la llave generada para la Python API.
 
@@ -936,11 +936,11 @@ Es importante verificar que los contenedores se encuentran detenidos para asegur
 
     2. Es importante tener en cuenta que en caso de haber cambiado la IP de la subred, será necesario aplicar este mismo cambio en todos los comandos en donde se utilice la IP de la subred. Para esto se debe modificar el segundo octeto de la IP de cada comando por el segundo octeto de la IP seleccionada, esto con el objetivo de que los comandos funcionen de manera correcta.
 
-    3. Modificar la línea número 11 en donde se encuentra la IP del host del archivo ejemplo_microservicios/tyk-gateway/tyk.standalone.conf. Es decir, modificar el segundo octeto de la IP por el segundo octeto de la IP seleccionada. Esto se deberá realizar antes de ejecutar este [paso](#Ejecución-del-contenedor-de-tyk).
+    3. Modificar la línea número 11 en donde se encuentra la IP del host del archivo [tyk.standalone.conf](ejemplo_microservicios/tyk-gateway/tyk.standalone.conf). Es decir, modificar el segundo octeto de la IP por el segundo octeto de la IP seleccionada. Esto se deberá realizar antes de ejecutar este [paso](#ejecución-del-contenedor-de-tyk).
 
-    4. Realizar la misma modificación en la línea 28 del archivo ejemplo_microservicios/microservice2/hello_dart/app.dart. Es decir, modificar el segundo octeto de la IP por el segundo octeto de la IP seleccionada. Esto se deberá realizar antes de ejecutar este [paso](#Construcción-y-ejecución-del-microservicio-2).
+    4. Realizar la misma modificación en la línea 28 del archivo [app.dart](ejemplo_microservicios/microservice2/hello_dart/app.dart). Es decir, modificar el segundo octeto de la IP por el segundo octeto de la IP seleccionada. Esto se deberá realizar antes de ejecutar este [paso](#construcción-y-ejecución-del-microservicio-2).
 
-    5. Modificar el segundo octeto de la IP en la línea 29 de los archivos api_dart.json, api_django.json y api_python.json por el segundo octeto de la IP seleccionada. Estos archivos se encuentran en la ruta /ejemplo_microservicios/tyk-gateway/apps. Esta acción deberá realizarse antes de crear las llaves, es decir antes de realizar este [paso](#Creación-de-las-llaves-para-el-API-Gateway).
+    5. Modificar el segundo octeto de la IP en la línea 29 de los archivos [api_dart.json](/ejemplo_microservicios/tyk-gateway/apps/api_dart.json), [api_django.json](/ejemplo_microservicios/tyk-gateway/apps/api_django.json) y [api_python](/ejemplo_microservicios/tyk-gateway/apps/api_python.json).json por el segundo octeto de la IP seleccionada. Estos archivos se encuentran en la ruta /ejemplo_microservicios/tyk-gateway/apps. Esta acción deberá realizarse antes de crear las llaves, es decir antes de realizar este [paso](#creación-de-las-llaves-para-el-api-Gateway).
  
 
 ## Versión
