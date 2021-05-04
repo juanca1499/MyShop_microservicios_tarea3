@@ -191,7 +191,9 @@ A partir de este directorio deberemos acceder a la carpeta de cada microservicio
 
 - Para crear las llaves es necesario realizar peticiones tipo POST al servicio de tyk que descargamos anteriormente y que debe estar corriendo en un contenedor de Docker. Cada petición regresará como resultado la información de la llave creada, de la información obtenida lo que nos interesa es el valor de key, el cual debemos guardar pues lo utilizaremos más adelante.
 
-- Las peticiones pueden ser realizadas por medio de alguna herramienta como Postman la cual podemos descargar [aquí](https://www.postman.com/downloads/) o se puede realizar desde consola utilizando la herramienta curl, la cual se explica en esta [sección](#Creación-de-llaves-por-medio-de-Curl).
+- Las peticiones pueden ser realizadas por medio de alguna herramienta como Postman la cual podemos descargar [aquí](https://www.postman.com/downloads/) o se puede realizar desde consola utilizando la herramienta curl, la cual se explica en esta [sección](#creación-de-llaves-por-medio-de-curl).
+
+   Nota: Para la creación de las llaves se utiliza 'localhost' en los comandos y en Postman debido a que se probó en la misma máquina. Si se está utilizando una máquina virtual o se está trabajando con dos máquinas al mismo tiempo, se debe cambiar el 'localhost' según corresponda.
 
     
 ##### Creación de llaves por medio de Postman
@@ -498,6 +500,8 @@ $ curl --request POST \
 
 > http://localhost:5000/
 
+    Nota: Si se está utilizando una máquina virtual a través de Vagrant, se deberá sustituir el host 'localhost' por la IP privada utilizada para la máquina virtual.
+
 - Si todo funcionó correctamente debemos poder ver la siguiente interfaz, en donde podremos probar el funcionamiento de los microservicios:
 
     <p align="center">
@@ -537,6 +541,8 @@ Los siguientes pasos se deberán realizar solamente cuando se desee continuar co
 
    Esto creará una carpeta llamada "venv" que representa nuestro ambiente virtual y donde instalaremos todas las dependencias.
 
+   Nota: Si estamos utilizando una carpeta compartida entre una máquina virtual y nuestra máquina, se recomienda crear el entorno virtual e instalar los requerimientos fuera de la carpeta compartida.
+
 - Activamos el ambiente virtual:
    ```shell
    $ source venv/bin/activate
@@ -562,6 +568,12 @@ Los siguientes pasos se deberán realizar solamente cuando se desee continuar co
     falcon-cors  |   1.1.7   |
     gunicorn     |  20.0.4   |
     waitress     |   2.0.0   |
+
+- Si alguno de los requerimientos necesarios no se instala correctamente, deberemos proceder a instalarlos manualmente como en el siguiente ejemplo de instalación de falcon:
+
+   ```shell
+    (venv)$ pip3 install falcon==2.0.0
+   ```
 
 
 #### Ejecución
@@ -644,6 +656,8 @@ Nota: Recordar que en este caso estamos probando el microservicio sin la ayuda d
 
    Esto creará una carpeta llamada "venv" que representa nuestro ambiente virtual y donde instalaremos todas las dependencias.
 
+   Nota: Si estamos utilizando una carpeta compartida entre una máquina virtual y nuestra máquina, se recomienda crear el entorno virtual e instalar los requerimientos fuera de la carpeta compartida.
+
 - Activamos el ambiente virtual:
    ```shell
    $ source venv/bin/activate
@@ -670,6 +684,12 @@ Nota: Recordar que en este caso estamos probando el microservicio sin la ayuda d
     django-cors-headers  |   3.5.0   |
     Pillow               |   8.1.1   |
     gunicorn             |  20.0.4   |
+
+- Si alguno de los requerimientos necesarios no se instala correctamente, deberemos proceder a instalarlos manualmente como en el siguiente ejemplo de instalación de django:
+
+   ```shell
+    (venv)$ pip3 install django==3.1.7
+   ```
 
 
 #### Ejecución
@@ -717,6 +737,8 @@ Nota: Recordar que en este caso estamos probando el microservicio sin la ayuda d
 
    Esto creará una carpeta llamada "venv" que representa nuestro ambiente virtual y donde instalaremos todas las dependencias.
 
+   Nota: Si estamos utilizando una carpeta compartida entre una máquina virtual y nuestra máquina, se recomienda crear el entorno virtual e instalar los requerimientos fuera de la carpeta compartida.
+
 - Activamos el ambiente virtual:
    ```shell
    $ source venv/bin/activate
@@ -744,6 +766,12 @@ Nota: Recordar que en este caso estamos probando el microservicio sin la ayuda d
     requests     |   2.25.0  |
     Pillow       |   8.1.1   |
     gunicorn     |  20.0.4   |
+
+- Si alguno de los requerimientos necesarios no se instala correctamente, deberemos proceder a instalarlos manualmente como en el siguiente ejemplo de instalación de Flask:
+
+   ```shell
+    (venv)$ pip3 install Flask==1.1.2
+   ```
 
 
 #### Ejecución
@@ -883,6 +911,7 @@ Es importante verificar que los contenedores se encuentran detenidos para asegur
 
 > http://localhost:5000/
 
+    Nota: Si se está utilizando una máquina virtual a través de Vagrant, se deberá sustituir el host 'localhost' por la IP privada utilizada para la máquina virtual.
 
 
 ## Comandos Docker
@@ -940,7 +969,7 @@ Es importante verificar que los contenedores se encuentran detenidos para asegur
 
     4. Realizar la misma modificación en la línea 28 del archivo [app.dart](ejemplo_microservicios/microservice2/hello_dart/app.dart). Es decir, modificar el segundo octeto de la IP por el segundo octeto de la IP seleccionada. Esto se deberá realizar antes de ejecutar este [paso](#construcción-y-ejecución-del-microservicio-2).
 
-    5. Modificar el segundo octeto de la IP en la línea 29 de los archivos [api_dart.json](/ejemplo_microservicios/tyk-gateway/apps/api_dart.json), [api_django.json](/ejemplo_microservicios/tyk-gateway/apps/api_django.json) y [api_python](/ejemplo_microservicios/tyk-gateway/apps/api_python.json).json por el segundo octeto de la IP seleccionada. Estos archivos se encuentran en la ruta /ejemplo_microservicios/tyk-gateway/apps. Esta acción deberá realizarse antes de crear las llaves, es decir antes de realizar este [paso](#creación-de-las-llaves-para-el-api-Gateway).
+    5. Modificar el segundo octeto de la IP en la línea 29 de los archivos [api_dart.json](/ejemplo_microservicios/tyk-gateway/apps/api_dart.json), [api_django.json](/ejemplo_microservicios/tyk-gateway/apps/api_django.json) y [api_python](/ejemplo_microservicios/tyk-gateway/apps/api_python.json).json por el segundo octeto de la IP seleccionada. Estos archivos se encuentran en la ruta /ejemplo_microservicios/tyk-gateway/apps. Esta acción deberá realizarse antes de crear las llaves, es decir antes de realizar este [paso](#creación-de-las-llaves-para-el-api-gateway).
  
 
 ## Versión
