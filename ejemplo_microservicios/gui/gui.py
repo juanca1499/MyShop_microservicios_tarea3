@@ -25,18 +25,18 @@ from flask import Flask, render_template
 import json, requests
 from flask_cors import CORS
 
-app = Flask(__name__)
+app = Flask(__name__,static_url_path='/static')
 CORS(app)
 
 # Se definen las llaves de cada microservicio
 
-key_m1 = "<microservice1_key>"
+key_m1 = "a8aa91941a9d46acb9bb4e383f07cc8a"
 headers_m1 = {"authorization": key_m1}
 
-key_m2 = "<microservice2_key>"
+key_m2 = "69f999e0beb0413095f73e0e3cf9791d"
 header_m2 = {"authorization": key_m2}
 
-key_m3 = "<microservice3_key>"
+key_m3 = "2546998a061a4fb980e6a6e67b179968"
 header_m3 = {"authorization": key_m3}
 
 
@@ -56,7 +56,7 @@ url_microservice3 = 'http://host.docker.internal:8080/hello/django'
 @app.route("/", defaults={'api': None}, methods=['GET'])
 @app.route("/<api>", methods=['GET'])
 def index(api):
-
+    
     # Se verifica si se recibió la variable api
     if api:
 
@@ -87,7 +87,7 @@ def index(api):
     # Si no se recibe, simplemente se regresa el template index.html sin datos.
     else:
         json_result = {}
-        return render_template("index.html", result=json_result)
+        return render_template("catalog/list.html", result=json_result)
 
 
 if __name__ == '__main__':

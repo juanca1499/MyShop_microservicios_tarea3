@@ -16,5 +16,5 @@ Including another URLconf
 from django.urls import path, include
 
 urlpatterns = [
-    path('hello/', include('hello_django.urls')),
+    path('catalog/', include('catalog.urls')),
 ]

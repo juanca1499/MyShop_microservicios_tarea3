@@ -42,3 +42,4 @@ EXPOSE 5000
 
 # Se ejecuta el comando para levantar la aplicación GUI en Flask
 CMD ["/usr/bin/supervisord", "-c", "/etc/supervisor/conf.d/supervisord.conf"]
+#
