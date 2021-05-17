@@ -1,5 +1,7 @@
-{% extends "shop/base.html" %}
-{% load static %}
+{% extends "base.html" %}
+
+{% set product = result['product'] %}
+{% set category = result['category'] %}
 
 {% block title %}
     {{ product.name }}
@@ -7,16 +9,27 @@
 
 {% block content %}
     <div class="product-detail">
-        <img src="{% if product.image %}{{ product.image.url }}{% else %}{% static "img/no_image.png" %}{% endif %}">
+        <img src="{% if product.image %}{{ url_for('static', filename=product.image) }}{% else %}{{ url_for('static', filename='media/img/no_image.png') }}{% endif %}">
         <h1>{{ product.name }}</h1>
-        <h2><a href="{{ product.category.get_absolute_url }}">{{ product.category }}</a></h2>
+        <h2><a href="">{{ category.name }}</a></h2>
         <p class="price">${{ product.price }}</p>
-        <form action="{% url "cart_add" product.id %}" method="post">
-            {{ cart_product_form }}
-            {% csrf_token %}
+        <form action="" method="post">
+            <input type="hidden" name="csrfmiddlewaretoken" value="{{ csrf_token }}">
+            <tr>
+                <th>
+                    <label for="id_quantity">Quantity:</label>
+                </th>
+                <td>
+                    <select name="quantity" id="id_quantity">
+                        {% for number in range(1, product.stock + 1) %}
+                            <option value="{{number}}">{{ number }}</option>
+                        {% endfor %}
+                    </select>
+                </td>   
             <input type="submit" value="Add to cart">
         </form>
-        {{ product.description|linebreaks }}
+        <br>
+        {{ product.description }}
     </div>
 {% endblock %}
 

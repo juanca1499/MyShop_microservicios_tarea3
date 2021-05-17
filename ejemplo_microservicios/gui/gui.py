@@ -25,7 +25,7 @@ from flask import Flask, render_template
 import json, requests
 from flask_cors import CORS
 
-app = Flask(__name__,static_url_path='/static')
+app = Flask(__name__,static_url_path='/static/')
 CORS(app)
 
 # Se definen las llaves de cada microservicio
@@ -45,17 +45,55 @@ header_m3 = {"authorization": key_m3}
 # con los microservicios dentro de los contenedores de Docker.
 
 # Url para el microservicio 1
-url_microservice1 = 'http://host.docker.internal:8080/hello/python'
+url_microservice1 = 'http://localhost:8080/cart'
 # Url para el microservicio 2
 url_microservice2 = 'http://host.docker.internal:8080/hello/dart'
 # Url para el microservicio 3
-url_microservice3 = 'http://host.docker.internal:8080/hello/django'
+url_microservice3 = 'http://localhost:8000/catalog'
 
 
 # Método que muestra la página de inicio del sistema
-@app.route("/", defaults={'api': None}, methods=['GET'])
+@app.route("/", defaults={'slug': None}, methods=['GET'])
+@app.route("/<slug>", methods=['GET'])
+def index(slug):
+    categories = requests.get(url_microservice3 + "/category",headers=header_m3)
+    if slug:
+        category = requests.get(url_microservice3 + "/category/" + slug, headers=header_m3)
+        json_category = category.json()
+        products = requests.get(url_microservice3 + "/product/" + slug, headers=header_m3)
+    else:
+        products = requests.get(url_microservice3 + "/product", headers=header_m3)
+        json_category = None
+
+    json_products = products.json()
+    json_categories = categories.json() 
+    json_result = {'products': json_products,
+                   'categories': json_categories,
+                   'category': json_category}
+
+    return render_template("catalog/list.html", result=json_result)
+
+@app.route("/category",methods=['GET'])
+def categories():
+    categories = requests.get(url_microservice3 + "/category",headers=header_m3)
+    json_categories = categories.json() 
+    json_result = {'categories': json_categories}
+    return render_template("catalog/list.html", result=json_result)
+
+@app.route("/product/<pk>", methods=['GET'])
+def product(pk):
+    product = requests.get(url_microservice3 + "/product/" + pk)
+    json_product = product.json()
+    category_id = json_product['category']
+    category = requests.get(url_microservice3 + "/category/" + str(category_id))
+    json_category = category.json()
+    json_result = {'product': json_product,
+                   'category' : json_category}
+
+    return render_template("catalog/detail.html", result=json_result)
+
 @app.route("/<api>", methods=['GET'])
-def index(api):
+def other(api):
     
     # Se verifica si se recibió la variable api
     if api:
@@ -81,14 +119,17 @@ def index(api):
             json = ms3.json()
             # Se crea el json que será enviado al template
             json_result = {'ms3': json}
+            return render_template("catalog/list.html", result=json_result)
         
-        return render_template("index.html", result=json_result)
+        #return render_template("index.html", result=json_result)
     
-    # Si no se recibe, simplemente se regresa el template index.html sin datos.
+    # Si no se reciben datos, se muestra la lista de productos (vista inicial)
     else:
-        json_result = {}
-        return render_template("catalog/list.html", result=json_result)
+        pass
+        #categories = requests.get(url_microservice3 + "/category",headers=header_m3)
+        #json_categories = categories.json() 
 
+# @app.route("add/<str:pk>",methods=[GET])
 
 if __name__ == '__main__':
     app.run(debug=True, host='0.0.0.0')

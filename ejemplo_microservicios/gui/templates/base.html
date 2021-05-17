@@ -21,7 +21,7 @@
     <div id="subheader">
 
         <div style="float:left; margin:0px;">
-            <a href="/shop/"><h2>My shop</h2></a>
+            <a href="/"><h2>My shop</h2></a>
         </div>
         
         <div class="cart" style="float:right; margin-right:10px; margin-top: 20px;">
@@ -29,7 +29,7 @@
                 {% if total_items > 0 %}
                     Your cart:
                     {{ url_for('static', filename='css/base.css') }} 
-                    <a href="{% url "cart_detail" %}">
+                    <a href="">
                         {{ total_items }} item{{ total_items|pluralize }}, ${{ cart.get_total_price }}
                     </a>
                 {% else %}
@@ -39,13 +39,12 @@
         </div>
 
         <div style="float:right; margin-right:5px; margin-top: 20px;">
-            <img class="logo" width="30px" src="{% static "img/cart.png" %}">
+            <img class="logo" width="30px" src="{{ url_for('static', filename='img/cart.png') }}">
         </div>
 
         <div class="cart" style="float:right; margin-right:30px; margin-top: 20px;">
-            <a href="{% url 'order_list' %}">Cancel order</a>
+            <a href="">Cancel order</a>
         </div>
-
     </div>
     <div id="content">
         {% block content %}

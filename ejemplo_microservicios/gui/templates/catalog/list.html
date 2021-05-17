@@ -9,29 +9,29 @@
     <div id="sidebar">
         <h3>Categories</h3>
         <ul>
+            {% set category = result['category'] %}
             <li {% if not category %}class="selected"{% endif %}>
-                <a href="">All</a>
+                <a href="/">All</a>
             </li>
-        {% for c in categories %}
+        {% for c in result['categories'] %}
             <li {% if category.slug == c.slug %}class="selected"{% endif %}>
-                <a href="{{ c.get_absolute_url }}">{{ c.name }}</a>
+                <a href="/{{c.slug}}">{{ c.name }}</a>
             </li>
         {% endfor %}
         </ul>
     </div>
     <div id="main" class="product-list">
         <h1>{% if category %}{{ category.name }}{% else %}Products{% endif %}</h1>
-        {% for product in products %}
+        {% for product in result['products'] %}    
             <div class="item">
                 <div>
-                    <a href="{{ product.get_absolute_url }}">
-                        {{ url_for('static', filename='"img/no_image.png"') }}
-                        <img class="image" src="{% if product.image %}{{ product.image.url }}{% else %}{{ url_for('static', filename='img/no_image.png') }}{% endif %}">
+                    <a href="/product/{{product.id}}">
+                        <img class="image" src="{% if product.image %}{{ url_for('static', filename=product.image) }}{% else %}{{ url_for('static', filename='media/img/no_image.png') }}{% endif %}">
                     </a>
                 </div>
-                <a href="{{ product.get_absolute_url }}">{{ product.name }}</a><br>
+                <a href="/product/{{ product.id }}">{{ product.name }}</a><br>
                 ${{ product.price }}
-            </div>
+            </div>   
         {% endfor %}
     </div>
 {% endblock %}

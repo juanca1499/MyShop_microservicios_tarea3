@@ -21,17 +21,21 @@ urlpatterns = [
         'get': 'list',
         'post': 'create'
     })),
-    path('product/<str:pk>', ProductViewSet.as_view({
+     path('product/<int:pk>', ProductViewSet.as_view({
         'get': 'retrieve',
-        'put': 'update',
-        'delete': 'destroy'
+    })),
+    path('product/<str:slug>', ProductViewSet.as_view({
+        'get': 'retrieve_by_category',
     })),
     path('category', CategoryViewSet.as_view({
         'get': 'list',
         'post': 'create'
     })),
-    path('category/<str:pk>', CategoryViewSet.as_view({
+    path('category/<int:pk>', CategoryViewSet.as_view({
         'get': 'retrieve',
+    })),
+    path('category/<str:slug>', CategoryViewSet.as_view({
+        'get': 'retrieve_by_slug',
         'post': 'update',
         'delete': 'destroy'
     }))

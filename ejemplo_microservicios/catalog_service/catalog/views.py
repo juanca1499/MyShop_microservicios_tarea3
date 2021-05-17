@@ -80,11 +80,22 @@ class ProductViewSet(viewsets.ViewSet):
         return Response(serializer.data, status=status.HTTP_201_CREATED)
 
     # Método que se accede por la URL /product/<str:pk>
-    def retrieve(self, request, pk=None):
+    def retrieve(self, request, pk):
         # Se obtiene el producto con ayuda del pk recibido
         product = Product.objects.get(id=pk)
         # Se crea el serializer
         serializer = ProductSerializer(product)
+        # Se envía la respuesta a la solicitud
+        return Response(serializer.data)
+
+    # Método que se accede por la URL /product/<str:slug>
+    def retrieve_by_category(self, request, slug):
+        # Se obtiene el producto con ayuda del slug recibido
+        category = get_object_or_404(Category, slug=slug)
+        products = Product.objects.all()
+        products = products.filter(category=category)
+        # Se crea el serializer
+        serializer = ProductSerializer(products, many=True)
         # Se envía la respuesta a la solicitud
         return Response(serializer.data)
 
@@ -131,10 +142,19 @@ class CategoryViewSet(viewsets.ViewSet):
         # Se envía la respuesta de la solicitud
         return Response(serializer.data, status=status.HTTP_201_CREATED)
 
-    # Método que se accede por la URL /category/<str:pk>
-    def retrieve(self, request, pk=None):
+    # # Método que se accede por la URL /category/<str:pk>
+    def retrieve(self, request, pk):
         # Se obtiene la categoría con ayuda del pk recibido
         category = Category.objects.get(id=pk)
+        # Se crea el serializer
+        serializer = CategorySerializer(category)
+        # Se envía la respuesta a la solicitud
+        return Response(serializer.data)
+
+    # Método que se accede por la URL /category/<str:slug>
+    def retrieve_by_slug(self, request, slug):
+        # Se obtiene la categoría con ayuda del slug recibido
+        category = get_object_or_404(Category, slug=slug)
         # Se crea el serializer
         serializer = CategorySerializer(category)
         # Se envía la respuesta a la solicitud
