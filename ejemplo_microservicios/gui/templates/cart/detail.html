@@ -1,5 +1,7 @@
-{% extends "shop/base.html" %}
-{% load static %}
+{% extends "base.html" %}
+
+{% set cart = result['cart'] %}
+{% set cart_info = result['cart_info'] %}
 
 {% block title %}
     Your shopping cart
@@ -19,38 +21,40 @@
             </tr>
         </thead>
         <tbody>
-        {% for item in cart %}
-            {% with product=item.product %}
+        {% for cart_item in cart %}
             <tr>
+                <td><img width="110" height="150" src="{% if cart_item.image %}{{ url_for('static', filename=cart_item.image) }}{% else %}{{ url_for('static', filename='media/img/no_image.png') }}{% endif %}"></td>
+                <td>{{cart_item.name}}</td>
                 <td>
-                    <a href="{{ product.get_absolute_url }}">
-                        <img src="{% if product.image %}{{ product.image.url }}{% else %}{% static "img/no_image.png" %}{% endif %}">
-                    </a>
-                </td>
-                <td>{{ product.name }}</td>
-                <td>
-                    <form action="{% url "cart_add" product.id %}" method="post">
-                        {{ item.update_quantity_form.quantity }}
-                        {{ item.update_quantity_form.update }}
-                        <input type="submit" value="Update">
-                        {% csrf_token %}
+                    <form action="/cart/abcdefg/{{cart_item.product_id}}" method="post">
+                        <input type="hidden" name="csrfmiddlewaretoken" value="{{ csrf_token }}">
+                        <select name="quantity" id="id_quantity">
+                            {% for number in range(1, 21) %}
+                                {% set qty = cart_item.quantity %}
+                                {% if number != qty %}
+                                    <option value="{{number}}">{{ number }}</option>
+                                {% else %}
+                                    <option value="{{qty}}" selected>{{qty}}</option>    
+                                {% endif %}   
+                            {% endfor %}
+                            <input type="submit" value="Update">
+                        </select>
                     </form>
                 </td>
-                <td><a href="{% url "cart_remove" product.id %}">Remove</a></td>
-                <td class="num">${{ item.price }}</td>
-                <td class="num">${{ item.total_price }}</td>
-            </tr>
-            {% endwith %}
+                <td><a href="/cart/abcdefg/{{cart_item.product_id}}">Remove</a></td>
+                <td>{{cart_item.unit_price}}</td>
+                <td>{{cart_item.price}}</td>                
+            </tr>      
         {% endfor %}
         <tr class="total">
             <td>Total</td>
             <td colspan="4"></td>
-            <td class="num">${{ cart.get_total_price }}</td>
+            <td class="num">${{ cart_info.total }}</td>
         </tr>
         </tbody>
     </table>
     <p class="text-right">
-        <a href="{% url "product_list" %}" class="button light">Continue shopping</a>
-        <a href="{% url "order_create" %}" class="button">Checkout</a>
+        <!-- <a href="product_list" class="button light">Continue shopping</a>
+        <a href="" class="button">Checkout</a> -->
     </p>
 {% endblock %}

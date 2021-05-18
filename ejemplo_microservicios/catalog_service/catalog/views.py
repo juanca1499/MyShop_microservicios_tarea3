@@ -17,7 +17,7 @@
 #           |         Nombre         |        Parámetros        |        Función        |
 #           +------------------------+--------------------------+-----------------------+
 #           |                        |                          |                       |
-#           |                        |                          |  - Obtiene la lista   |
+#           |            h            |                          |  - Obtiene la lista   |
 #           |         list()         |  - request: datos de     |    de mensajes.       |
 #           |                        |    la solicitud.         |                       |
 #           |                        |                          |                       |
@@ -55,7 +55,7 @@ from rest_framework import viewsets,status
 from rest_framework.response import Response
 from rest_framework.views import APIView
 
-from .models import Message, Product, Category
+from .models import  Product, Category
 from .serializers import MessageSerializer, ProductSerializer, CategorySerializer
 
 class ProductViewSet(viewsets.ViewSet):

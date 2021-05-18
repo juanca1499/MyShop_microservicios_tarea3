@@ -13,21 +13,26 @@
 #-------------------------------------------------------------------------
 
 from django.urls import path
-from . import views
+from .views import CartViewSet
 
 urlpatterns = [
-    path('', views.cart_detail({
-        'get': 'list',
-        'post': 'create'
+    path('info/<str:session_id>', CartViewSet.as_view({
+        'get': 'retrieve'
     })),
-    path('add/<str:pk>', views.cart_add({
-        'get': 'retrieve',
-        'post': 'update',
-        'delete': 'destroy'
+    path('items', CartViewSet.as_view({
+        'post': 'add_item'
     })),
-    path('remove/<str:pk>', views.cart_remove({
-        'get': 'retrieve',
-        'post': 'update',
-        'delete': 'destroy'
+    path('items/<str:session_id>', CartViewSet.as_view({
+        'get': 'items_list',
+    })),
+    path('items-qty/<str:session_id>', CartViewSet.as_view({
+        'get': 'get_items_qty',
+    })),
+    path('total/<str:session_id>', CartViewSet.as_view({
+        'get': 'get_cart_total'
+    })),
+    path('items/<str:session_id>/<int:product_id>', CartViewSet.as_view({
+        'post': 'update_item',
+        'delete': 'remove_item'
     }))
 ]
