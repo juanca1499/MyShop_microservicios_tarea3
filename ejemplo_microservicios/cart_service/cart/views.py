@@ -37,9 +37,11 @@
 from django.shortcuts import render, redirect, get_object_or_404
 from rest_framework import viewsets,status
 from rest_framework.response import Response
+import decimal
+
 from .models import CartItem, Cart
 from .serializers import CartSerializer, CartItemSerializer
-import decimal
+
 
 class CartViewSet(viewsets.ViewSet):
     
@@ -73,9 +75,9 @@ class CartViewSet(viewsets.ViewSet):
         # Se obtiene el carrito de la sesión
         cart = get_object_or_404(Cart,session_id=session_id)
         total = cart.total
-        serializer = serializers.serialize("json", total)
-        print(serializer.data)
-        return Response(serializer.data)
+        total_json = json.dumps(Decimal(total))
+        print(total_json)
+        return Response(total_json)
 
     # Método que se accede por la URL /items
     def add_item(self, request):
@@ -116,7 +118,7 @@ class CartViewSet(viewsets.ViewSet):
             cart_item.quantity = quantity
             cart_item.price = price
             cart_item.save()
-            cart.total =  decimal.Decimal(cart.total) + decimal.Decimal(cart_item.price)
+            cart.total = decimal.Decimal(cart.total) + decimal.Decimal(cart_item.price)
         # Si ya existe, sólo se aumenta la cantidad solicitada.
         else:
             cart_item.quantity = cart_item.quantity + quantity

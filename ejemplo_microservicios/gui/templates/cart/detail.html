@@ -1,8 +1,5 @@
 {% extends "base.html" %}
 
-{% set cart = result['cart'] %}
-{% set cart_info = result['cart_info'] %}
-
 {% block title %}
     Your shopping cart
 {% endblock %}
@@ -21,7 +18,7 @@
             </tr>
         </thead>
         <tbody>
-        {% for cart_item in cart %}
+        {% for cart_item in cart_items %}
             <tr>
                 <td><img width="110" height="150" src="{% if cart_item.image %}{{ url_for('static', filename=cart_item.image) }}{% else %}{{ url_for('static', filename='media/img/no_image.png') }}{% endif %}"></td>
                 <td>{{cart_item.name}}</td>
@@ -54,7 +51,7 @@
         </tbody>
     </table>
     <p class="text-right">
-        <!-- <a href="product_list" class="button light">Continue shopping</a>
-        <a href="" class="button">Checkout</a> -->
+        <a href="/" class="button light">Continue shopping</a>
+        <a href="" class="button">Checkout</a>
     </p>
 {% endblock %}

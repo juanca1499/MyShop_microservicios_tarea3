@@ -56,7 +56,7 @@ url_catalog = 'http://localhost:8000/catalog'
 @app.route("/", defaults={'slug': None}, methods=['GET'])
 @app.route("/<slug>", methods=['GET'])
 def index(slug):
-    cart_total = requests.get(url_cart + "/total/abcdefg"headers=headers_cart)
+    json_cart_info, json_cart_items  = get_cart_info()
     categories = requests.get(url_catalog + "/category",headers=header_catalog)
     if slug:
         category = requests.get(url_catalog + "/category/" + slug, headers=header_catalog)
@@ -70,33 +70,41 @@ def index(slug):
     json_categories = categories.json() 
     json_result = {'products': json_products,
                    'categories': json_categories,
-                   'category': json_category}
+                   'category': json_category,
+                    'cart_items': json_cart_items,
+                    'cart_info': json_cart_info}
 
     return render_template("catalog/list.html", result=json_result)
 
 @app.route("/category",methods=['GET'])
 def categories():
+    json_cart_info, json_cart_items  = get_cart_info()
     categories = requests.get(url_catalog + "/category",headers=header_catalog)
     json_categories = categories.json() 
-    json_result = {'categories': json_categories}
+    json_result = {'categories': json_categories,
+                   'cart_items': json_cart_items,
+                   'cart_info': json_cart_info}
     return render_template("catalog/list.html", result=json_result)
 
 @app.route("/product/<pk>", methods=['GET'])
 def product(pk):
+    json_cart_info, json_cart_items  = get_cart_info()
     product = requests.get(url_catalog + "/product/" + pk)
     json_product = product.json()
     category_id = json_product['category']
     category = requests.get(url_catalog + "/category/" + str(category_id))
     json_category = category.json()
     json_result = {'product': json_product,
-                   'category' : json_category}
+                   'category' : json_category,
+                   'cart_items': json_cart_items,
+                   'cart_info': json_cart_info}
 
     return render_template("catalog/detail.html", result=json_result)
 
-@app.route("/cart", defaults={'session_id':'abcdefg', 'product_id':None}, methods=['POST'])
+@app.route("/cart", defaults={'session_id':'abcdefg', 'product_id':None}, methods=['POST','GET'])
 @app.route("/cart/<session_id>", defaults={'product_id' : None} , methods=['GET'])
 @app.route("/cart/<session_id>/<product_id>", methods=['POST'])
-def cart(session_id,product_id): 
+def cart(session_id,product_id):
     cart_items = None
     # Se agrega un item al carrito. 
     if request.method == "POST":
@@ -114,7 +122,7 @@ def cart(session_id,product_id):
     cart_info = requests.get(url_cart + "/info/" + session_id, headers=headers_cart)
     json_cart_info = cart_info.json()
     json_cart_items = cart_items.json()
-    json_result = {'cart': json_cart_items,
+    json_result = {'cart_items': json_cart_items,
                    'cart_info' : json_cart_info}
 
     return render_template("cart/detail.html", result=json_result)
@@ -132,8 +140,13 @@ def delete_cart_item(session_id,product_id):
 
     return render_template("cart/detail.html", result=json_result)
 
-@app.route("/items-qty/<str:session_id>")
-
+def get_cart_info(session_id=None):
+    cart_items = requests.get(url_cart + "/items/abcdefg", headers=headers_cart) 
+    cart_info = requests.get(url_cart + "/info/abcdefg", headers=headers_cart)
+    json_cart_items = cart_items.json()
+    json_cart_info = cart_info.json()
+    return json_cart_info, json_cart_items
+    
 
 if __name__ == '__main__':
     app.run(debug=True, host='0.0.0.0')

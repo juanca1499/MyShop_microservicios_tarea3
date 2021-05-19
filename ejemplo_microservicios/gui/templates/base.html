@@ -1,6 +1,9 @@
 <!DOCTYPE html>
 <html>
 <head>
+    {% set cart_items = result['cart_items'] %}
+    {% set cart_info = result['cart_info'] %}
+
     <meta charset="utf-8" />
     <title>{% block title %}My shop{% endblock %}</title>
     <style>
@@ -25,13 +28,14 @@
         </div>
         
         <div class="cart" style="float:right; margin-right:10px; margin-top: 20px;">
-            {% with total_items=cart|length %}
-                {% if total_items > 0 %}
-                    Your cart is not empty
-                {% else %}
-                    Your cart is empty.
-                {% endif %}
-            {% endwith %}
+            {% if cart_items|length > 0 %}
+                Your cart: 
+                <a href="/cart">
+                    {{ cart_items|length }} item(s), ${{ cart_info.total }}
+                </a>
+            {% else %}
+                Your cart is empty.
+            {% endif %}
         </div>
 
         <div style="float:right; margin-right:5px; margin-top: 20px;">
