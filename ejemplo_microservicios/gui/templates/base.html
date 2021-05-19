@@ -20,7 +20,6 @@
     <link href="{{ url_for('static', filename='css/base.css') }}" rel="stylesheet">
 </head>
 <body>
-
     <div id="subheader">
 
         <div style="float:left; margin:0px;">
@@ -28,11 +27,15 @@
         </div>
         
         <div class="cart" style="float:right; margin-right:10px; margin-top: 20px;">
-            {% if cart_items|length > 0 %}
-                Your cart: 
-                <a href="/cart">
-                    {{ cart_items|length }} item(s), ${{ cart_info.total }}
-                </a>
+            {% if cart_items %}
+                {% if cart_items|length > 0 %}
+                    Your cart: 
+                    <a href="/cart">
+                        {{ cart_items|length }} item(s), ${{ cart_info.total }}
+                    </a>
+                {% else %}
+                    Your cart is empty.
+                {% endif %}
             {% else %}
                 Your cart is empty.
             {% endif %}

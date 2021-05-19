@@ -101,7 +101,7 @@ class CartViewSet(viewsets.ViewSet):
             cart.total = 0.0
             cart.save()
 
-        # Detectamos si el item elegido es uno ya existente en el carrito
+        # Detectamos si el item elegido es uno ya existente en el carrito 
         try:
             cart_item = CartItem.objects.get(cart=cart,product_id=product_id)
         except:
@@ -169,5 +169,14 @@ class CartViewSet(viewsets.ViewSet):
         cart.save()
         # Se procede a eliminar el item del carrito
         cart_item.delete()
+        # Se envía la respuesta a la solicitud
+        return Response(status=status.HTTP_204_NO_CONTENT)
+
+    # Método que se accede por la URL /product/<str:pk>
+    def destroy(self, request, session_id):
+        # Se obtiene el producto con ayuda del pk recibido
+        cart = Cart.objects.get(session_id=session_id)
+        # Se procede a eliminar el producto
+        cart.delete()
         # Se envía la respuesta a la solicitud
         return Response(status=status.HTTP_204_NO_CONTENT)

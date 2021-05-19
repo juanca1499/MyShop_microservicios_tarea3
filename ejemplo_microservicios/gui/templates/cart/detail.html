@@ -5,53 +5,57 @@
 {% endblock %}
 
 {% block content %}
-    <h1>Your shopping cart</h1>
-    <table class="cart">
-        <thead>
-            <tr>
-                <th>Image</th>
-                <th>Product</th>
-                <th>Quantity</th>
-                <th>Remove</th>
-                <th>Unit price</th>                
-                <th>Price</th>
+    {% if cart_items|length > 0 %}
+        <h1>Your shopping cart</h1>
+        <table class="cart">
+            <thead>
+                <tr>
+                    <th>Image</th>
+                    <th>Product</th>
+                    <th>Quantity</th>
+                    <th>Remove</th>
+                    <th>Unit price</th>                
+                    <th>Price</th>
+                </tr>
+            </thead>
+            <tbody>
+            {% for cart_item in cart_items %}
+                <tr>
+                    <td><img width="110" height="150" src="{% if cart_item.image %}{{ url_for('static', filename=cart_item.image) }}{% else %}{{ url_for('static', filename='media/img/no_image.png') }}{% endif %}"></td>
+                    <td>{{cart_item.name}}</td>
+                    <td>
+                        <form action="/cart/abcdefg/{{cart_item.product_id}}" method="post">
+                            <input type="hidden" name="csrfmiddlewaretoken" value="{{ csrf_token }}">
+                            <select name="quantity" id="id_quantity">
+                                {% for number in range(1, 21) %}
+                                    {% set qty = cart_item.quantity %}
+                                    {% if number != qty %}
+                                        <option value="{{number}}">{{ number }}</option>
+                                    {% else %}
+                                        <option value="{{qty}}" selected>{{qty}}</option>    
+                                    {% endif %}   
+                                {% endfor %}
+                                <input type="submit" value="Update">
+                            </select>
+                        </form>
+                    </td>
+                    <td><a href="/cart/abcdefg/{{cart_item.product_id}}">Remove</a></td>
+                    <td>{{cart_item.unit_price}}</td>
+                    <td>{{cart_item.price}}</td>                
+                </tr>      
+            {% endfor %}
+            <tr class="total">
+                <td>Total</td>
+                <td colspan="4"></td>
+                <td class="num">${{ cart_info.total }}</td>
             </tr>
-        </thead>
-        <tbody>
-        {% for cart_item in cart_items %}
-            <tr>
-                <td><img width="110" height="150" src="{% if cart_item.image %}{{ url_for('static', filename=cart_item.image) }}{% else %}{{ url_for('static', filename='media/img/no_image.png') }}{% endif %}"></td>
-                <td>{{cart_item.name}}</td>
-                <td>
-                    <form action="/cart/abcdefg/{{cart_item.product_id}}" method="post">
-                        <input type="hidden" name="csrfmiddlewaretoken" value="{{ csrf_token }}">
-                        <select name="quantity" id="id_quantity">
-                            {% for number in range(1, 21) %}
-                                {% set qty = cart_item.quantity %}
-                                {% if number != qty %}
-                                    <option value="{{number}}">{{ number }}</option>
-                                {% else %}
-                                    <option value="{{qty}}" selected>{{qty}}</option>    
-                                {% endif %}   
-                            {% endfor %}
-                            <input type="submit" value="Update">
-                        </select>
-                    </form>
-                </td>
-                <td><a href="/cart/abcdefg/{{cart_item.product_id}}">Remove</a></td>
-                <td>{{cart_item.unit_price}}</td>
-                <td>{{cart_item.price}}</td>                
-            </tr>      
-        {% endfor %}
-        <tr class="total">
-            <td>Total</td>
-            <td colspan="4"></td>
-            <td class="num">${{ cart_info.total }}</td>
-        </tr>
-        </tbody>
-    </table>
-    <p class="text-right">
-        <a href="/" class="button light">Continue shopping</a>
-        <a href="" class="button">Checkout</a>
-    </p>
+            </tbody>
+        </table>
+        <p class="text-right">
+            <a href="/" class="button light">Continue shopping</a>
+            <a href="/order/checkout" class="button">Checkout</a>
+        </p>
+    {% else %}
+        <h1>Your shopping cart is empty!</h1>
+    {% endif %}
 {% endblock %}

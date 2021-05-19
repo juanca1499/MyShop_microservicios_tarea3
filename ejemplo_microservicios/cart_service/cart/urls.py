@@ -19,6 +19,9 @@ urlpatterns = [
     path('info/<str:session_id>', CartViewSet.as_view({
         'get': 'retrieve'
     })),
+    path('delete/<str:session_id>', CartViewSet.as_view({
+        'delete' : 'destroy'
+    })),
     path('items', CartViewSet.as_view({
         'post': 'add_item'
     })),

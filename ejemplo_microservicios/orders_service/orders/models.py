@@ -31,8 +31,6 @@ from django.db import models
 #
 #-------------------------------------------------------------------------
 
-from catalog.models import Product
-
 class Order(models.Model):
     first_name = models.CharField(max_length=50)
     last_name = models.CharField(max_length=50)
@@ -43,6 +41,7 @@ class Order(models.Model):
     created = models.DateTimeField(auto_now_add=True)
     updated = models.DateTimeField(auto_now=True)
     paid = models.BooleanField(default=False)
+    total = models.DecimalField(max_digits=15, decimal_places=2)
 
     # Clase Meta en donde se indican campos para ordenamiento.
     class Meta:
@@ -52,20 +51,11 @@ class Order(models.Model):
     def __str__(self):
         return 'Order {}'.format(self.id)
 
-    # Método que obtiene el costo total de la orden.
-    def get_total_cost(self):
-        return sum(item.get_cost() for item in self.items.all())
-
 class OrderItem(models.Model):
     order = models.ForeignKey(Order, related_name='items', on_delete=models.CASCADE)
-    product = models.ForeignKey(Product, related_name='order_items', on_delete=models.CASCADE)
-    price = models.DecimalField(max_digits=11, decimal_places=2)
+    product_id = models.PositiveIntegerField()
+    name = models.CharField(max_length=100)
+    image = models.ImageField(blank=True)
+    unit_price = models.DecimalField(max_digits=10, decimal_places=2)
     quantity = models.PositiveIntegerField(default=1)
-
-    # Método to String de la clase, la cual es representada por el campo 'id'.
-    def __str__(self):
-        return '{}'.format(self.id)
-
-    # Método que obtiene el costo total del item de la orden.
-    def get_cost(self):
-        return self.price * self.quantity
+    price = models.DecimalField(max_digits=11, decimal_places=2)

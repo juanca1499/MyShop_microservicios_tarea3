@@ -13,7 +13,7 @@
 #-------------------------------------------------------------------------
 
 from django.urls import path
-from . import views
+from .views import OrderViewSet
 
 urlpatterns = [
     path('order', OrderViewSet.as_view({
@@ -24,5 +24,8 @@ urlpatterns = [
         'get': 'retrieve',
         'post': 'update',
         'delete': 'destroy'
-    }))
+    })),
+    path('order/items/<str:pk>', OrderViewSet.as_view({
+        'get': 'items_list',
+    })),   
 ]

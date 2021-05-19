@@ -47,7 +47,7 @@ header_catalog = {"authorization": key_catalog}
 # Url para el microservicio 1
 url_cart = 'http://localhost:8080/cart'
 # Url para el microservicio 2
-url_order = 'http://host.docker.internal:8080/hello/dart'
+url_order = 'http://localhost:9000/order'
 # Url para el microservicio 3
 url_catalog = 'http://localhost:8000/catalog'
 
@@ -131,22 +131,49 @@ def cart(session_id,product_id):
 def delete_cart_item(session_id,product_id):
      # Se solicitó eliminar un item del carrito
     requests.delete(url_cart + "/items/" + session_id + "/" + str(product_id) , headers=headers_cart)
-    cart_items = requests.get(url_cart + "/items/" + session_id, headers=headers_cart) 
-    cart_info = requests.get(url_cart + "/info/" + session_id, headers=headers_cart)
-    json_cart_info = cart_info.json()
-    json_cart_items = cart_items.json()
-    json_result = {'cart': json_cart_items,
+    json_cart_info, json_cart_items  = get_cart_info()
+    json_result = {'cart_items': json_cart_items,
                    'cart_info' : json_cart_info}
 
     return render_template("cart/detail.html", result=json_result)
 
+@app.route("/order/checkout", methods=['GET'])
+def order_checkout():
+    json_cart_info, json_cart_items  = get_cart_info()
+    json_result = {'cart_items': json_cart_items,
+                   'cart_info' : json_cart_info}
+    return render_template("orders/create.html", result=json_result)
+
+@app.route("/order/place-order", defaults={'id' : None}, methods=['POST'])
+@app.route("/order/update/<id>",methods=['POST'])
+@app.route("/order/list", defaults={'id' : None}, methods=['GET'])
+@app.route("/order/<id>", methods=['GET'])
+@app.route("/order/delete/<id>",methods=['DELETE'])
+def order(id):
+    order = requests.post(url_order + "/order", headers=header_order, data = request.form)
+    order_json = order.json()
+    order_items = requests.get(url_order + "/order/items/" + str(order_json['id']), headers=header_order)
+    cart_delete("abcdefg")
+    order_items_json = order_items.json()
+    
+    json_result = {'order' : order_json,
+                   'cart' : order_items_json}
+    
+    return render_template("orders/created.html", result=json_result)
+
+def cart_delete(session_id):
+    requests.delete(url_cart + "/delete/" + session_id, headers=headers_cart)
+
+
 def get_cart_info(session_id=None):
     cart_items = requests.get(url_cart + "/items/abcdefg", headers=headers_cart) 
     cart_info = requests.get(url_cart + "/info/abcdefg", headers=headers_cart)
-    json_cart_items = cart_items.json()
-    json_cart_info = cart_info.json()
-    return json_cart_info, json_cart_items
-    
+    if cart_info.status_code != 404:
+        json_cart_items = cart_items.json()
+        json_cart_info = cart_info.json()
+        return json_cart_info, json_cart_items
+    else:
+        return None, None
 
 if __name__ == '__main__':
     app.run(debug=True, host='0.0.0.0')
