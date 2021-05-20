@@ -20,6 +20,10 @@ urlpatterns = [
         'get': 'list',
         'post': 'create'
     })),
+    path('order/delete/<str:pk>', OrderViewSet.as_view({
+        'get': 'confirm',
+        'delete': 'destroy'
+    })),
     path('order/<str:pk>', OrderViewSet.as_view({
         'get': 'retrieve',
         'post': 'update',
@@ -27,5 +31,9 @@ urlpatterns = [
     })),
     path('order/items/<str:pk>', OrderViewSet.as_view({
         'get': 'items_list',
-    })),   
+        'post': 'update_order'
+    })),
+    path('order/flag/<str:pk>', OrderViewSet.as_view({
+        'get': 'time_verify',
+    })),  
 ]

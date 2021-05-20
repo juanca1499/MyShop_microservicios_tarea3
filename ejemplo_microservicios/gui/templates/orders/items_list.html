@@ -1,21 +1,24 @@
-{% extends "shop/base.html" %}
-{% load static %}
+{% extends "base.html" %}
 
 {% block title %}
     Order items list
 {% endblock %}
 
 {% block content %}
+
+{% set order_items = result['order_items'] %}
+{% set modifiable = result['modifiable'] %}
+{% set order = result['order'] %}
+
     <h1>Order items list</h1>
-    {% if flag == False %}
-      <b><p>24 hours have passed since the order {{order.id}} was placed, therefore it cannot be modified</p></b>
+    {% if modifiable == False %}
+        <b><p>24 hours have passed since the order {{order.id}} was placed, therefore it cannot be modified</p></b>
     {% else %}
-    <p class="text-right">
-        <a class="button danger" href="{% url 'cancel_order' order.id %}">Cancel order</a>
-    </p>
-    {% endif %}
-    <form action="{% url 'update_order' order.id %}" method="POST">
-        {% csrf_token %}
+        <p class="text-right">
+            <a class="button danger" href="/order/delete/{{order.id}}">Cancel order</a>
+        </p>    
+    {% endif %}    
+    <form action="/order/update/{{order.id}}" method="POST">
         <table class="cart">
             <thead>
                 <th>ID</th>
@@ -24,44 +27,42 @@
                 <th>Price</th>
                 <th>Quantity</th>
                 <th>
-                {% if order_items|length > 1 and flag%}
+                {% if order_items|length > 1 and modifiable %}
                     Remove Item
                 {% endif %}
                 </th>
             </thead>
             <tbody>
                 {% for item in order_items %}
-                    {% with product=item.product %}
                         <tr>
                             <td>{{item.id}}</td>
                             <td>
-                                <a href="{{ product.get_absolute_url }}">
-                                    <img src="{% if product.image %}{{ product.image.url }}{% else %}{% static 'img/no_image.png' %}{% endif %}">
+                                <a href="/product/{{item.product_id}}">
+                                    <img src="{% if item.image %}{{ url_for('static', filename=item.image) }}{% else %}{{ url_for('static', filename='media/img/no_image.png') }}{% endif %}">
                                 </a>
                             </td>
-                            <td>{{item.product}}</td>
-                            <td>{{item.price}}</td>
+                            <td>{{item.name}}</td>
+                            <td>{{item.unit_price}}</td>
                             <td>{{item.quantity}}</td>
                             <td>
-                            {% if order_items|length > 1 %}
-                                    {% if flag %}
-                                        <input type="checkbox" name="item" value="{{item.id}}">
+                                {% if order_items|length > 1 %}
+                                    {% if modifiable %}
+                                        <input type="checkbox" name="item_{{loop.index}}" value="{{item.id}}">
                                     {% endif %}
-                            {% endif %}
+                                {% endif %}
                             </td>
                         </tr>
-                    {% endwith %}
                 {% endfor %}
             </tbody>
             <tr class="total">
                 <td>Total</td>
                 <td colspan="4"></td>
-                <td class="num">${{ order.get_total_cost }}</td>
+                <td class="num">${{order.total}}</td>
             </tr>
         </table>
         <p class="text-right">
-            <a class="button light" href="{% url 'order_list' %}">Return to order list</a>
-            {% if flag and order_items|length > 1 %}
+            <a class="button light" href="/order/list">Return to order list</a>
+            {% if modifiable and order_items|length > 1 %}
                 <button type="submit">Confirm changes</button>
             {% endif %}
         </p>

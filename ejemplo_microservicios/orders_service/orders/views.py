@@ -2,12 +2,15 @@ from django.shortcuts import render, redirect, get_object_or_404
 from rest_framework import viewsets,status
 from rest_framework.response import Response
 from django.core.mail import send_mail
-import decimal
-import json
-
-from .forms import OrderCreateForm
+from datetime import datetime, timedelta, timezone
+from zoneinfo import ZoneInfo
+from django.conf import settings
 from .models import OrderItem, Order
 from .serializers import OrderSerializer, OrderItemSerializer
+import decimal
+import json
+import pytz
+import time
 
 class OrderViewSet(viewsets.ViewSet):
     # Método que se accede por la URL /order
@@ -94,6 +97,9 @@ class OrderViewSet(viewsets.ViewSet):
     def destroy(self, request, pk=None):
         # Se obtiene la orden con ayuda del pk recibido
         order = Order.objects.get(id=pk)
+        notas=['cancelled','were contained','cancellation']
+        # Se envía el correo con los datos de la cancelación.
+        self.confirm(order.id,notas)
         # Se procede a eliminar la orden
         order.delete()
         # Se envía la respuesta a la solicitud
@@ -104,7 +110,7 @@ class OrderViewSet(viewsets.ViewSet):
         subject = 'Order nr. {}'.format(order.id)
 
         # Se define el mensaje a enviar.
-        message = 'Dear {},\n\nYou have successfully placed an order. The id your order is {}.\n\n\n'.format(order.first_name,order.id)
+        message = 'Dear {},\n\nYou have successfully placed an order. The id of your order is {}.\n\n\n'.format(order.first_name,order.id)
         message_part2 = 'Your order: \n\n'
         mesagges = []
 
@@ -119,19 +125,8 @@ class OrderViewSet(viewsets.ViewSet):
         # Se envía el correo.
         send_mail(subject, body, 'pruebas.jogglez@gmail.com', [order.email], fail_silently=False)
 
-# def cancel_order(request, id):
-#     order = Order.objects.get(id=id) 
-#     return render(request, 'orders/order/cancel_order_confirm.html', {'order' : order})
-
-    def cancel_order_confirm(self, request, id):
-        order = Order.objects.get(id=id)
-        notas=['cancelled','were contained','cancellation']
-        confirm(order.id,notas)
-        order.delete()
-        return redirect('order_list')
-
-    def order_detail(self, request, id):
-        order = Order.objects.get(id=id)    #   Obtener id de la orden que se quiere consultar 
+    def time_verify(self, request, pk):
+        order = Order.objects.get(id=pk)    #   Obtener id de la orden que se quiere consultar 
 
         #   Variable que indica si ya han pasado o no las 24 horas desde que se confirmó la orden. 
         # Flag igual a True indica que aún puede modificarse la orden, dado que no han pasado 24 horas.
@@ -152,14 +147,12 @@ class OrderViewSet(viewsets.ViewSet):
         # ¿Ya pasaron 24 horas desde la confirmación del pedido?:
         if (takeaway_hours > order_date):
             flag = False
-
-        # Listar los artículos de la orden
-        order_items = OrderItem.objects.filter(order=id)
-        return render(request, 'orders/order/items_list.html', {'order' : order,
-                                                                'order_items' : order_items,
-                                                                'flag' : flag,})
+        
+        return Response(flag)
 
     def confirm(self, order_id, notas):
+        print("\n\n\n\n")
+        print("******************** ENTRO AL CONFIRM ********************")
         # Se obtiene la información de la orden.
         order = Order.objects.get(id=order_id)
 
@@ -202,25 +195,34 @@ class OrderViewSet(viewsets.ViewSet):
         # Se envía el correo.
         send_mail(subject, body, 'pruebas.jogglez@gmail.com', [order.email], fail_silently=False)
 
-    def update_order(self, request,id):
+    def update_order(self, request, pk):
         if request.method == "POST":
             # Se extrae la lita de OrderItems seleccionadas.
-            
-            
-            # NO VA A JALAR ASÍ :(        
-            ids_to_delete = request.POST.getlist('item')
+            ids_to_delete = []
+            for key in request.data:
+                ids_to_delete.append(request.data[key])
+
             # Validamos que se haya seleccionado por lo menos un OrderItem.
             if len(ids_to_delete) > 0:
                 # Se consulan los OrderItem que tiene que tiene la Order.
-                items_in_order = OrderItem.objects.filter(order=id)
+                items_in_order = OrderItem.objects.filter(order=pk)
                 # Si se seleccionaron todos los productos de la orden, 
                 # entonces se procede a una cancelación total.
                 if len(ids_to_delete) == len(items_in_order):
-                    return cancel_order(request,id)
+                    return self.destroy(request,pk)
                 # De lo contrario, se procede a la cancelación parcial.
                 else:
+                    order = get_object_or_404(Order, id=pk)
                     for item_id in ids_to_delete:
                         order_item = OrderItem.objects.get(id=item_id)
+                        # Se resta el monto de los productos cancelados de la orden
+                        order.total = order.total - order_item.price
                         order_item.delete()     
-                    update_confirm(id)
-                    confirm(id,['modified','are still','modification'])
+                    order.save()
+                    self.update_confirm(pk)
+                    self.confirm(pk,['modified','are still','modification'])
+    
+        return Response(status=status.HTTP_202_ACCEPTED)
+
+    
+        
