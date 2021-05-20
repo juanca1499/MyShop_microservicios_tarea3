@@ -108,9 +108,7 @@ def cart(session_id,product_id):
     cart_items = None
     # Se agrega un item al carrito. 
     if request.method == "POST":
-        print("\n\n\n\n\nENTRE AL POST")
         if product_id==None:
-            print(request.form)
             cart_items = requests.post(url_cart + "/items", headers=headers_cart, data = request.form)
         else:
             cart_items = requests.post(url_cart + "/items/"+session_id +"/"+ product_id, headers=headers_cart, data = request.form)
@@ -151,7 +149,7 @@ def order_checkout():
 @app.route("/order/delete/<id>",methods=['GET'])
 @app.route("/order/delete-confirm/<id>",methods=['GET'])
 def order(id):
-    json_cart_info, json_cart_items  = get_cart_info()
+    json_cart_info, json_cart_items = get_cart_info()
     orders = requests.get(url_order +  "/order", headers=header_order)
     orders_json = orders.json()
     if request.method == "POST":
@@ -161,6 +159,7 @@ def order(id):
             order_json = order.json()
             order_items = requests.get(url_order + "/order/items/" + str(order_json['id']), headers=header_order)
             cart_delete("abcdefg")
+            json_cart_info, json_cart_items = get_cart_info()
             order_items_json = order_items.json()
         
             json_result = {'cart_info': json_cart_info,
@@ -175,9 +174,13 @@ def order(id):
             if response.status_code == 204:
                 orders = requests.get(url_order +  "/order", headers=header_order)
                 orders_json = orders.json()
-                return render_template("orders/list.html",result=orders_json)
+                json_result = {'cart_info': json_cart_info,
+                               'cart_items': json_cart_items,
+                               'orders': orders_json}
+                return render_template("orders/list.html",result=json_result)
+           
             # Se canceló un subconjunto de items de la orden
-            else:
+            elif response.status_code == 202:
                 order_items= requests.get(url_order + "/order/items/" + str(id), headers=header_order)
                 order = requests.get(url_order + "/order/" + str(id) , headers=header_order)
                 json_cart_info, json_cart_items = get_cart_info()
@@ -198,9 +201,20 @@ def order(id):
                 # Se vuelve a hacer la solicitud para que se vean reflejados los cambios.
                 orders = requests.get(url_order +  "/order", headers=header_order)
                 orders_json = orders.json()
-                return render_template("orders/list.html",result=orders_json)
-            return render_template("orders/cancel_order_confirm.html", result=id)
-        return render_template("orders/list.html",result=orders_json)
+                json_result ={'cart_info': json_cart_info,
+                              'cart_items': json_cart_items,
+                              'orders': orders_json}
+                return render_template("orders/list.html",result=json_result)
+            json_result ={'cart_info': json_cart_info,
+                        'cart_items': json_cart_items,
+                        'id': id}
+            return render_template("orders/cancel_order_confirm.html", result=json_result)
+        
+        # Se va a consultar la lista de ordenes.
+        json_result ={'cart_info': json_cart_info,
+                      'cart_items': json_cart_items,
+                      'orders': orders_json}
+        return render_template("orders/list.html",result=json_result)
 
 @app.route("/order/detail/<id>", methods=['GET'])
 def order_detail(id):

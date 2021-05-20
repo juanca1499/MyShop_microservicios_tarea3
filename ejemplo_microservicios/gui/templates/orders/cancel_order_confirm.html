@@ -4,7 +4,7 @@
     Order delete confirm
 {% endblock %}
 
-{% set order = result %}
+{% set order = result['id'] %}
 
 {% block content %}
         <p>Are you sure that you want to delete the order with id {{order}}?</p>

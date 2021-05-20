@@ -22,7 +22,7 @@
             <th>Options</th>
         </thead>
         <tbody>
-            {% for order in result %}
+            {% for order in result['orders'] %}
                     <tr>
                         <td>{{order.id}}</td>
                         <td>{{order.first_name}}</td>

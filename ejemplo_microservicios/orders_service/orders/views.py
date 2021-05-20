@@ -151,8 +151,6 @@ class OrderViewSet(viewsets.ViewSet):
         return Response(flag)
 
     def confirm(self, order_id, notas):
-        print("\n\n\n\n")
-        print("******************** ENTRO AL CONFIRM ********************")
         # Se obtiene la información de la orden.
         order = Order.objects.get(id=order_id)
 

@@ -76,7 +76,6 @@ class CartViewSet(viewsets.ViewSet):
         cart = get_object_or_404(Cart,session_id=session_id)
         total = cart.total
         total_json = json.dumps(Decimal(total))
-        print(total_json)
         return Response(total_json)
 
     # Método que se accede por la URL /items
