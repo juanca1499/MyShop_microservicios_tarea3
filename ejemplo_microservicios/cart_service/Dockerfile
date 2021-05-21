@@ -34,8 +34,8 @@ COPY . /usr/api
 RUN pip install --upgrade pip
 RUN pip install -r requirements.txt
 
-# Se expone el puerto 49001 para acceder a la aplicación
-EXPOSE 49001
+# Se expone el puerto 49003 para acceder a la aplicación
+EXPOSE 49003
 
 # Se ejecuta el archivo supervisord que inicia el micro servicio en django
 CMD ["/usr/bin/supervisord", "-c", "/etc/supervisor/conf.d/supervisord.conf"]

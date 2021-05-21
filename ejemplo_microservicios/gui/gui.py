@@ -30,13 +30,13 @@ CORS(app)
 
 # Se definen las llaves de cada microservicio
 
-key_cart = "64a36b0f816346028acb48af68c98ed0"
+key_cart = "0bee02ac55014531996d8c4fd20c7057"
 header_cart = {"authorization": key_cart}
 
-key_order = "37ff1871a4ec46da8157b55c28df6de3"
+key_order = "975a4b5b810f4ae7b489c4f46bdc1a3e"
 header_order = {"authorization": key_order}
 
-key_catalog = "f479b934654a4e76a42cf5c95adaffc1"
+key_catalog = "d6252275c37c43258803cb0ee7ff1d78"
 header_catalog = {"authorization": key_catalog}
 
 
@@ -89,7 +89,7 @@ def categories():
 @app.route("/product/<pk>", methods=['GET'])
 def product(pk):
     json_cart_info, json_cart_items  = get_cart_info()
-    product = requests.get(url_catalog + "/product/" + pk)
+    product = requests.get(url_catalog + "/product/" + pk, headers=header_catalog)
     json_product = product.json()
     category_id = json_product['category']
     category = requests.get(url_catalog + "/category/" + str(category_id))
@@ -106,12 +106,14 @@ def product(pk):
 @app.route("/cart/<session_id>/<product_id>", methods=['POST'])
 def cart(session_id,product_id):
     cart_items = None
-    # Se agrega un item al carrito. 
     if request.method == "POST":
+        # Se agrega un producto al carrito.
         if product_id==None:
+            print("****************** NUEVO ********************")
             cart_items = requests.post(url_cart + "/items", headers=header_cart, data = request.form)
+        # Se actualiza la cantidad de un producto en el carrito.
         else:
-            cart_items = requests.post(url_cart + "/items/"+session_id +"/"+ product_id, headers=header_cart, data = request.form)
+            cart_items = requests.post(url_cart + "/items/"+ session_id +"/"+ product_id, headers=header_cart, data = request.form)
      
     # Se obtiene la lista de items en el carrito
     elif request.method == "GET":
@@ -209,12 +211,12 @@ def order(id):
                         'cart_items': json_cart_items,
                         'id': id}
             return render_template("orders/cancel_order_confirm.html", result=json_result)
-        
-        # Se va a consultar la lista de ordenes.
-        json_result ={'cart_info': json_cart_info,
-                      'cart_items': json_cart_items,
-                      'orders': orders_json}
-        return render_template("orders/list.html",result=json_result)
+        else:
+            # Se va a consultar la lista de ordenes.
+            json_result ={'cart_info': json_cart_info,
+                        'cart_items': json_cart_items,
+                        'orders': orders_json}
+            return render_template("orders/list.html",result=json_result)
 
 @app.route("/order/detail/<id>", methods=['GET'])
 def order_detail(id):
