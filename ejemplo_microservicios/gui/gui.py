@@ -30,13 +30,13 @@ CORS(app)
 
 # Se definen las llaves de cada microservicio
 
-key_cart = "a8aa91941a9d46acb9bb4e383f07cc8a"
-headers_cart = {"authorization": key_cart}
+key_cart = "64a36b0f816346028acb48af68c98ed0"
+header_cart = {"authorization": key_cart}
 
-key_order = "69f999e0beb0413095f73e0e3cf9791d"
+key_order = "37ff1871a4ec46da8157b55c28df6de3"
 header_order = {"authorization": key_order}
 
-key_catalog = "2546998a061a4fb980e6a6e67b179968"
+key_catalog = "f479b934654a4e76a42cf5c95adaffc1"
 header_catalog = {"authorization": key_catalog}
 
 
@@ -44,12 +44,12 @@ header_catalog = {"authorization": key_catalog}
 # Se reemplaza el 127.0.0.1 del localhost por host.docker.internal para hacer la conexión
 # con los microservicios dentro de los contenedores de Docker.
 
-# Url para el microservicio 1
-url_cart = 'http://localhost:8080/cart'
-# Url para el microservicio 2
-url_order = 'http://localhost:9000/order'
-# Url para el microservicio 3
-url_catalog = 'http://localhost:8000/catalog'
+# Url para el microservicio del carrito
+url_cart = 'http://host.docker.internal:8080/cart'
+# Url para el microservicio de las órdenes
+url_order = 'http://host.docker.internal:8080/order'
+# Url para el microservicio del catálogo de productos
+url_catalog = 'http://host.docker.internal:8080/catalog'
 
 
 # Método que muestra la página de inicio del sistema
@@ -109,15 +109,15 @@ def cart(session_id,product_id):
     # Se agrega un item al carrito. 
     if request.method == "POST":
         if product_id==None:
-            cart_items = requests.post(url_cart + "/items", headers=headers_cart, data = request.form)
+            cart_items = requests.post(url_cart + "/items", headers=header_cart, data = request.form)
         else:
-            cart_items = requests.post(url_cart + "/items/"+session_id +"/"+ product_id, headers=headers_cart, data = request.form)
+            cart_items = requests.post(url_cart + "/items/"+session_id +"/"+ product_id, headers=header_cart, data = request.form)
      
     # Se obtiene la lista de items en el carrito
     elif request.method == "GET":
-        cart_items = requests.get(url_cart + "/items/" + session_id, headers=headers_cart) 
+        cart_items = requests.get(url_cart + "/items/" + session_id, headers=header_cart) 
 
-    cart_info = requests.get(url_cart + "/info/" + session_id, headers=headers_cart)
+    cart_info = requests.get(url_cart + "/info/" + session_id, headers=header_cart)
     json_cart_info = cart_info.json()
     json_cart_items = cart_items.json()
     json_result = {'cart_items': json_cart_items,
@@ -128,7 +128,7 @@ def cart(session_id,product_id):
 @app.route("/cart/<session_id>/<product_id>", methods=['GET'])
 def delete_cart_item(session_id,product_id):
      # Se solicitó eliminar un item del carrito
-    requests.delete(url_cart + "/items/" + session_id + "/" + str(product_id) , headers=headers_cart)
+    requests.delete(url_cart + "/items/" + session_id + "/" + str(product_id) , headers=header_cart)
     json_cart_info, json_cart_items  = get_cart_info()
     json_result = {'cart_items': json_cart_items,
                    'cart_info' : json_cart_info}
@@ -233,15 +233,15 @@ def order_detail(id):
         return render_template("orders/items_list.html",result=json_result)
 
 def cart_delete(session_id):
-    requests.delete(url_cart + "/delete/" + session_id, headers=headers_cart)
+    requests.delete(url_cart + "/delete/" + session_id, headers=header_cart)
 
 def get_time_flag(id):
     flag = requests.get(url_order+ "/order/flag/" +str(id))
     return flag.json()
 
 def get_cart_info(session_id=None):
-    cart_items = requests.get(url_cart + "/items/abcdefg", headers=headers_cart) 
-    cart_info = requests.get(url_cart + "/info/abcdefg", headers=headers_cart)
+    cart_items = requests.get(url_cart + "/items/abcdefg", headers=header_cart) 
+    cart_info = requests.get(url_cart + "/info/abcdefg", headers=header_cart)
     if cart_info.status_code != 404:
         json_cart_items = cart_items.json()
         json_cart_info = cart_info.json()

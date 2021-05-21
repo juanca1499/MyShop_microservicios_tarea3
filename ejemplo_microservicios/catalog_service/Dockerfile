@@ -39,3 +39,9 @@ EXPOSE 49003
 
 # Se ejecuta el archivo supervisord que inicia el micro servicio en django
 CMD ["/usr/bin/supervisord", "-c", "/etc/supervisor/conf.d/supervisord.conf"]
+
+
+RUN chown www-data:www-data /usr/api/
+RUN chown www-data:www-data /usr/api/db.sqlite3
+RUN chmod 777 /usr/api
+RUN chmod 777 /usr/api/db.sqlite3

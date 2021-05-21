@@ -25,7 +25,7 @@ RUN mkdir -p /var/log/supervisor
 WORKDIR /usr/api
 
 # Se copia el archivo gunicorn.conf en el directorio de trabajo del contenedor
-COPY ./deployment/gunicorn.conf /etc/supervisor/conf.d/supervisord.conf
+COPY ./gunicorn.conf /etc/supervisor/conf.d/supervisord.conf
 
 # Se copia el contenido de este directorio en el directorio de trabajo del contenedor
 COPY . /usr/api
@@ -37,5 +37,11 @@ RUN pip install -r requirements.txt
 # Se expone el puerto 49001 para acceder a la aplicación
 EXPOSE 49001
 
-# Se ejecuta el archivo supervisord que inicia el micro servicio en python
-CMD ["/usr/bin/supervisord"]
+# Se ejecuta el archivo supervisord que inicia el micro servicio en django
+CMD ["/usr/bin/supervisord", "-c", "/etc/supervisor/conf.d/supervisord.conf"]
+
+
+RUN chown www-data:www-data /usr/api/
+RUN chown www-data:www-data /usr/api/db.sqlite3
+RUN chmod 777 /usr/api
+RUN chmod 777 /usr/api/db.sqlite3
