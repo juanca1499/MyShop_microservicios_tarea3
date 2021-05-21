@@ -30,13 +30,13 @@ CORS(app)
 
 # Se definen las llaves de cada microservicio
 
-key_cart = "0bee02ac55014531996d8c4fd20c7057"
+key_cart = "e4fdb9fbf159440eb7aeecd05ea9f666"
 header_cart = {"authorization": key_cart}
 
-key_order = "975a4b5b810f4ae7b489c4f46bdc1a3e"
+key_order = "bd0a63d549f545e5b9f0dc7739086a48"
 header_order = {"authorization": key_order}
 
-key_catalog = "d6252275c37c43258803cb0ee7ff1d78"
+key_catalog = "dd2cb8973a164a6e806e918bd7c93dc6"
 header_catalog = {"authorization": key_catalog}
 
 
@@ -109,8 +109,7 @@ def cart(session_id,product_id):
     if request.method == "POST":
         # Se agrega un producto al carrito.
         if product_id==None:
-            print("****************** NUEVO ********************")
-            cart_items = requests.post(url_cart + "/items", headers=header_cart, data = request.form)
+            cart_items = requests.post(url_cart +"/items", headers=header_cart, data = request.form)
         # Se actualiza la cantidad de un producto en el carrito.
         else:
             cart_items = requests.post(url_cart + "/items/"+ session_id +"/"+ product_id, headers=header_cart, data = request.form)

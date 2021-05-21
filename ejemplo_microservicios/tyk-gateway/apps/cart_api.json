@@ -26,7 +26,7 @@
     },
     "proxy": {
         "listen_path": "/cart/",
-        "target_url": "http://172.15.0.6:49003/cart",
+        "target_url": "http://172.15.0.5:49003/cart",
         "strip_listen_path": true
     },
     "enable_batch_request_support": true
