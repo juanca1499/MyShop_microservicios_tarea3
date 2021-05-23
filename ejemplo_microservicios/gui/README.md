@@ -1,6 +1,6 @@
-# GUI - Ejemplo de Arquitecturas Microservicios
+# GUI - MyShop
 
-Esta carpeta contiene el código fuente de la GUI para el sistema Ejemplo de Arquitecturas Microservicios. La GUI fue desarrollada utilizando el framework Flask.
+Esta carpeta contiene el código fuente de la GUI para el sistema MyShop. La GUI fue desarrollada utilizando el framework Flask.
 
 ## Estructura del Directorio
 
@@ -61,7 +61,7 @@ Esta carpeta contiene el código fuente de la GUI para el sistema Ejemplo de Arq
    $ sudo docker ps
    ```
 
-   Este comando nos mostrará los contenedores que se encuentran corriendo, en la columna Status, debemos observar la palabra UP en los contenedores gui, api-python, api-dart, api-django, redis y tykio/tyk-gateway.
+   Este comando nos mostrará los contenedores que se encuentran corriendo, en la columna Status, debemos observar la palabra UP en los contenedores gui, api-catalog, api-orders, api-cart, redis y tykio/tyk-gateway.
 
 - Ya que confirmamos que nuestros contenedores se encuentran corriendo podremos ingresar a nuestro navegador y verificar que el sistema de ejemplo para probar los microservicios se encuentra funcionando correctamente, ingresamos a la siguiente url: 
 
@@ -70,9 +70,14 @@ Esta carpeta contiene el código fuente de la GUI para el sistema Ejemplo de Arq
 
 ## Versión
 
-1.0.0 - Marzo 2021
+2.0.0 - Mayo 2021
 
 ## Autores
 
 * **Perla Velasco**
 * **Jorge Alfonso Solís**
+* **Alejandro Carrillo Villegas**
+* **César Gabriel Díaz Curiel**
+* **Juan Carlos García Murillo**
+* **Josué Guillermo González Pinedo**
+* **José Germán González Rodarte**

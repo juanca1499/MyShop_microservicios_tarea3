@@ -9,9 +9,14 @@ Esta carpeta contiene los archivos correspondientes al Gateway de la Arquitectur
 
 ## Versión
 
-1.0.0 - Marzo 2021
+2.0.0 - Mayo 2021
 
 ## Autores
 
 * **Perla Velasco**
 * **Jorge Alfonso Solís**
+* **Alejandro Carrillo Villegas**
+* **César Gabriel Díaz Curiel**
+* **Juan Carlos García Murillo**
+* **Josué Guillermo González Pinedo**
+* **José Germán González Rodarte**

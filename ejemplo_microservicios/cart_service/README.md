@@ -1,43 +1,53 @@
-# Microservice1: Python - Ejemplo de Arquitecturas Microservicios
+# Microservice cart: Django - MyShop
 
-Esta carpeta contiene el código fuente del Microservice 1 para el sistema Ejemplo de Arquitecturas Microservicios. El microservicio fue desarrollada utilizando el lenguaje de programación python y el framework Falcon.
+Esta carpeta contiene el código fuente del Microservice cart para el sistema MyShop. El microservicio fue desarrollada utilizando el lenguaje de programación python y el framework Django.
 
 ## Estructura del Directorio
 
-- deployment: Directorio que almacena el archivo gunicorn.conf para el despliegue del microservicio.
-- hello_python: Directorio que almacena el código fuente del microservicio.
-- .python-version: Archivo con la versión utilizada de Python.
-- Dockerfile: Archivo que contiene las configuraciones necesarias para el despliegue del microservicio 1 en Docker.
+- cart: Directorio que almacena el código fuente de la aplicación carrito.
+- cart_service: Directorio que almacena el código fuente de la aplicación en general.
+- db.sqlite3: Archivo de la base de datos del microservicio.
+- Dockerfile: Archivo que contiene las configuraciones necesarias para el despliegue del microservicio en Docker.
+- gunicorn.conf: Archivo que contiene las configuraciones necesarias para el despliegue del microservicio.
+- manage.py: Archivo para el manejo del sistema desarrollado con el Framework django.
 - requirements.txt: Archivo que contiene las dependencias de la aplicación.
 
-### Construcción y ejecución del microservicio 1
+### Construcción y ejecución del microservicio carrito
 
-- Estas son algunas consideraciones a tomar en cuenta para construir y ejecutar el contenedor del microservicio 1. Si ya se llevaron acabo estos pasos que son mencionados también en el archivo README.md de la carpeta raíz, por favor omitirlos.
+- Estas son algunas consideraciones a tomar en cuenta para construir y ejecutar el contenedor del microservicio carrito. Si ya se llevaron acabo estos pasos que son mencionados también en el archivo README.md de la carpeta raíz, por favor omitirlos.
 
    ```shell
-   $ cd microservice1
+   $ cd cart_service
 
-   $ docker build -t api-python:1.0 .
+   $ docker build -t api-cart:1.0 .
 
-   $ docker run -d --name api-python --network tyk --ip 172.15.0.4 api-python:1.0
+   $ docker run -d --name api-cart --network tyk --ip 172.15.0.5 api-cart:1.0
+
+   $ cd ..
    ```
 
    En Linux:
 
    ```shell
-   $ cd microservice1
+   $ cd cart_service
 
-   $ sudo docker build -t api-python:1.0 .
+   $ sudo docker build -t api-cart:1.0 .
 
-   $ sudo docker run -d --name api-python --network tyk --ip 172.15.0.4 api-python:1.0
+   $ sudo docker run -d --name api-cart --network tyk --ip 172.15.0.5 api-cart:1.0
+   
+   $ cd ..
    ```
-
 
 ## Versión
 
-1.0.0 - Marzo 2021
+2.0.0 - Mayo 2021
 
 ## Autores
 
 * **Perla Velasco**
 * **Jorge Alfonso Solís**
+* **Alejandro Carrillo Villegas**
+* **César Gabriel Díaz Curiel**
+* **Juan Carlos García Murillo**
+* **Josué Guillermo González Pinedo**
+* **José Germán González Rodarte**
