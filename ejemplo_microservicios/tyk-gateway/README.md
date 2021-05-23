@@ -1,6 +1,6 @@
-# Tyk-Gateway - Ejemplo de Arquitecturas Microservicios
+# Tyk-Gateway - MyShop
 
-Esta carpeta contiene los archivos correspondientes al Gateway de la Arquitectura de Microservicios. La tecnología utilizada se denomina tyk.
+Esta carpeta contiene los archivos correspondientes al Gateway de MyShop La tecnología utilizada se denomina tyk.
 
 ## Estructura del Directorio
 

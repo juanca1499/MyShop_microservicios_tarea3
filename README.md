@@ -12,7 +12,7 @@ La estructura del sistema está compuesta por 3 microservicios, los cuales está
 
 A continuación se muestra una vista estática del diseño del sistema:
 
-![Vista estática del sistema](docs/diagrama_contenedores.png)
+![Vista estática del sistema](docs/MyShop_microservices.png)
 
 ## Prerrequisitos
 
@@ -20,7 +20,7 @@ A continuación se muestra una vista estática del diseño del sistema:
    ```shell
    $ git clone https://github.com/juanca1499/MyShop_microservicios_tarea3
 
-   $ cd MyShop_microservicios
+   $ cd MyShop_microservicios_tarea3
 
    ```
 
@@ -45,7 +45,7 @@ A continuación se muestra una vista estática del diseño del sistema:
    ```
 
 
-## Despliegue del sistema de microservicios
+## Despliegue del sistema MyShop
 
 Se deben correr los siguientes comandos en la carpeta raíz del proyecto.
 

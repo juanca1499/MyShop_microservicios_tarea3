@@ -1,4 +1,4 @@
-# Ejemplo de Arquitecturas de Microservicios
+# MyShop
 
 ## Estructura del proyecto
 
